@@ -1,7 +1,7 @@
 def projectFolder =  ' . '
 def jarPath  ="${projectFolder}/builds/libs"
 def artifactoryGroupPath = ' com/transaction' 
-def artifactoryArtifactId =  ' transactionApi'
+def artifactoryArtifactId =  'transactionApi'
 
 def dockerOrgName = ' dig-plantapps'
 def dockerImageName = artifactoryArtifactId
