@@ -1,0 +1,93 @@
+def projectFolder =  ' . '
+def jarPath  ="${projectFolder}/builds/libs"
+def artifactoryGroupPath = ' com/transaction' 
+def artifactoryArtifactId =  ' transactionApi'
+
+def dockerOrgName = ' dig-plantapps'
+def dockerImageName = artifactoryArtifactId
+def dockerDeployName = ' ' 
+
+//docker version value will be assigned late after version prefix is determined
+def dockerTag =
+def dockerTagLatest=
+def dockerTagIntegration =
+def jarFileName =
+def versionPrefix =
+def versionWithSnapShotReplaced =
+def releaseBuild =false
+
+
+pipeline  {
+      
+	    agent none
+		
+		//global env variables
+		
+		environment {
+
+             EMAIL_RECIPIENTS =  ' krishnachaitu.17@gmail.com '
+         
+                 }		 
+				 
+				 
+		stages {
+		
+		     stage ( ' checkout & build ' ) {
+			 
+			     agent {
+				     
+					   docker {
+					   
+					      image  ' gradle:4.1 '
+						  label    ' dind '
+						  args   ' -v  /var/lib/docker/ .gradle:/root/.gradle'
+					   
+					   
+					     }
+				   
+				   
+				   }
+				   
+				   steps {
+				     
+					   checkout  scm
+					   sh ' chmod +x gradlew ' 
+					   
+					    script {
+						
+						versionPrefix = sh(script:  "  ./gradlew properties  |grep version ")
+						  
+						   echo versionPrefix
+						
+						 }
+						 
+						 sh  ' ./gradlew clean build '
+				   
+				   
+				    }
+					
+					post  {
+					
+					     success {
+						 
+						     echo  "checkout &build stage succesful"
+						 
+						  }
+						  
+						  failure {
+						  
+						     echo  "checkout &build stage failed"
+						  
+						   }
+					
+					  
+					}
+			 
+			 
+			  }
+
+
+      }		
+
+
+}
